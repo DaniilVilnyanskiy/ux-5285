@@ -2,28 +2,30 @@
 <template>
   <form :action="action" method="put" novalidate>
     <div>
-      <label for="">
-      <input
-          placeholder="Example@mail.com"
-          id="email"
-          v-model="email"
-          type="email"
-          name="email"
-      >
-    </label>
-    <span class="form-error" v-if="errors.email">{{errors.email}}</span>
+      <label :class="errors.email && 'label-error'" for="">
+        <input
+            placeholder="Example@mail.com"
+            id="email"
+            v-model="email"
+            type="email"
+            name="email"
+        >
+        <Icon name="err"  v-if="errors.email" />
+      </label>
+      <span class="form-error" v-if="errors.email">{{errors.email}}</span>
     </div>
     <div>
-      <label for="">
-      <input
-          id="password"
-          v-model="password"
-          type="password"
-          name="password"
-          placeholder="Password"
-      >
-    </label>
-    <span class="form-error" v-if="errors.password">{{errors.password}}</span>
+      <label :class="errors.password && 'label-error'" for="">
+        <input
+            id="password"
+            v-model="password"
+            type="password"
+            name="password"
+            placeholder="Password"
+        >
+        <Icon name="err" v-if="errors.password" />
+      </label>
+      <span class="form-error" v-if="errors.password">{{errors.password}}</span>
     </div>
     <button class="btn btn_custom" type="submit" @click="checkForm">submit</button>
   </form>
@@ -32,8 +34,12 @@
 <script lang="ts">
 import { useStore } from 'vuex'
 import { key } from '../../store';
+import Icon from "./Icon.vue";
 
 export default {
+  components: {
+    Icon
+  },
   data(): {
     errors: {
       email: string,
@@ -106,16 +112,16 @@ export default {
                 this.modal.isVisible = true;
                 isRegistration = true;
 
-                setTimeout(()=> {
-                  this.modal.id = null;
-                  this.modal.isVisible = false;
-                }, 2000)
+                // setTimeout(()=> {
+                //   this.modal.id = null;
+                //   this.modal.isVisible = false;
+                // }, 2000)
               }
             })
             .catch((err) => console.log(err));
       }
     },
-    request: function (formData: any, type: any): Promise<any> {
+    request: function (formData: {email: string, password: string,}, type: string): Promise<any> {
       if (type === 'authorization') {
         const encode = btoa(`${formData.email}:${formData.password}`);
         if (!encode) return Promise.reject(new Error('Encoding failed'));
@@ -160,7 +166,10 @@ form {
     }
   }
   .form-error {
-    color: #ff001e;
+    color: #F22533;
+    text-align: center;
+    display: block;
+    margin-top: 12.5px;
   }
   input {
     width: 100%;
@@ -168,6 +177,11 @@ form {
     border: none;
     outline: none;
     padding-bottom: 5px;
+    background-color: white !important;
+    border-radius: 5px 5px 0 0;
+    &:-webkit-autofill {
+      background-color: white !important;
+    }
   }
   label {
     width: 100%;
@@ -175,17 +189,32 @@ form {
     font-weight: 400;
     font-size: 18px;
     line-height: 24px;
+    position: relative;
     @include xl {
       font-size: 14px;
       line-height: 22px;
     }
+    &.label-error {
+      .icon-err {
+        fill: #FF0000;
+        position: absolute;
+        right: 0;
+        top: 4px;
+      }
+      &:after {
+        border-bottom: 1px solid rgba(255, 0, 0, 0.5);
+      }
+    }
     &:after {
       content: '';
       display: block;
-      background: #3A3A3A;
-      opacity: 0.5;
-      width: 100%;
-      height: 1px;
+      border-bottom: 1px solid rgba(58, 58, 58, 0.5);
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      pointer-events: none;
     }
   }
   button {

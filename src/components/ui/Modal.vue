@@ -77,10 +77,12 @@ export default {
     border-radius: 50px;
     width: 70%;
     max-width: 1270px;
+    max-height: 652px;
     @include xl {
       width: calc(100% - 42px);
       padding: 20px 15px;
       border-radius: 20px;
+      max-height: 439px;
     }
   }
   &__success {
@@ -110,6 +112,7 @@ export default {
     max-width: 620px;
     margin-left: auto;
     margin-right: auto;
+    padding-top: 76px;
     @include xl {
       padding: 30px 0 52px 0;
     }
