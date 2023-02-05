@@ -1,5 +1,5 @@
 <template>
-  <InlineSvg :class="concat" :src="`/ux-5285/images/svg/${name}.svg`"
+  <InlineSvg :class="concat" :src="`/images/svg/${name}.svg`"
     :transformSource="transform"
   />
 </template>
