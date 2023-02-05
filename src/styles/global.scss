@@ -1,0 +1,18 @@
+@import "breakpoints";
+
+body {
+
+}
+ul {
+
+}
+a {
+  color: var(--black-primary);
+  &:hover {
+    color: var(--txt-gray-2);
+  }
+}
+svg {
+  width: 20px;
+  height: 20px;
+}
