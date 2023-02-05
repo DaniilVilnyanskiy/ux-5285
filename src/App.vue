@@ -1,13 +1,13 @@
 <template>
   <div id="body">
     <Header></Header>
-    <div class="container" v-if="this.$route.href !== '/main'">
+    <div class="container" v-if="$route.path !== '/main'">
       <Breadcrumbs />
     </div>
     <router-view />
     <section>
       <Modal
-          v-if="$store.state.modal.isVisible && $store.state.modal.id === 'registration'"
+          v-if="modal.isVisible && modal.id === 'registration'"
       >
         <template v-slot:body>
           <div class="modal__body_title">
@@ -19,14 +19,14 @@
       <Modal
           className="modal__success"
           id="success-notification"
-          v-if="$store.state.modal.isVisible && $store.state.modal.id === 'success-notification'"
+          v-if="modal.isVisible && modal.id === 'success-notification'"
       >
         <template v-slot:body>
           <h1 class="title">Thank You</h1>
           <div class="success-subtitle">To complete registration, please check your e-mail</div>
         </template>
       </Modal>
-      <div v-if="$store.state.modal.isVisible" class="overlay"></div>
+      <div v-if="modal.isVisible" class="overlay"></div>
     </section>
   </div>
 </template>
@@ -37,17 +37,32 @@ import Breadcrumbs from './components/ui/Breadcrumbs.vue';
 import Modal from "./components/ui/Modal.vue";
 import Form from "./components/ui/Form.vue";
 import { setCookie, getCookie, deleteCookie } from "./ts/utils";
+import { useStore } from 'vuex'
+import { key } from './store'
 
 export default {
   components: {
     Breadcrumbs ,Header, Modal, Form
+  },
+  data() {
+    return {
+      modal: ''
+    }
+  },
+  setup () {
+    const store = useStore(key)
+    const modal = store.state.modal;
+    const setToken = store.state.setToken;
+    return {
+      modal, setToken
+    }
   },
   methods: {
 
   },
   mounted() {
     // TODO: дописать код и удалить это
-    if (this.$store.state.setToken) {
+    if (this.setToken) {
       setCookie('token', 'test value token');
     } else {
       deleteCookie('token');

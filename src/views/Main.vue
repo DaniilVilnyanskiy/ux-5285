@@ -31,10 +31,10 @@
   </div>
 </template>
 <script lang="ts">
-import Banner from '~@/components/Banner.vue';
+import Banner from '../components/Banner.vue';
 import Modal from "../components/ui/Modal.vue";
-
-'~@/ts/utils.ts';
+import { useStore } from 'vuex'
+import { key } from '../store'
 
 export default {
   components: {
@@ -45,11 +45,17 @@ export default {
 
     };
   },
+  setup () {
+    const store = useStore(key)
+    const modal = store.state.modal;
+    return {
+      modal
+    }
+  },
   methods: {
-    showModal(id) {
-      this.$store.state.modal.isVisible = true;
-      this.$store.state.modal.id = id;
-      console.log(this.$store.state);
+    showModal(id: string) {
+      this.modal.isVisible = true;
+      this.modal.id = id;
     },
   }
 }

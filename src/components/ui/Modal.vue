@@ -1,6 +1,6 @@
 <template>
   <div class="modal">
-    <div :class="['modal__content', this.className]">
+    <div :class="['modal__content', className]">
       <div class="modal__head">
         <slot name="head">
         </slot>
@@ -24,6 +24,8 @@
 
 <script lang="ts">
 import Icon from "./Icon.vue";
+import { useStore } from 'vuex'
+import { key } from '../../store';
 
 export default {
   name: 'modal',
@@ -36,11 +38,18 @@ export default {
       type: String
     }
   },
+  setup() {
+    const store = useStore(key)
+    const modal = store.state.modal;
+    return {
+      modal
+    }
+  },
   methods: {
     close() {
-      this.$store.state.modal.isVisible = false;
+      this.modal.isVisible = false;
     },
-    request(e) {
+    request(e: Event) {
       e.preventDefault();
       console.log('test');
     }

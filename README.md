@@ -9,4 +9,4 @@
 
 
 
-> ##### 05.02.2023: the resource to which the selection request is being made responds with the status 401, so full registration / authorization does not work.
+> ##### 05.02.2023: At the time of completing the test task, the resource to which the selection request is being made responds with the status 401, 415, so full registration / authorization does not work.

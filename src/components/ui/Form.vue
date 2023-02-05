@@ -1,55 +1,70 @@
+
 <template>
-  <form :action="this.action" method="put" novalidate>
+  <form :action="action" method="put" novalidate>
     <div>
       <label for="">
       <input
           placeholder="Example@mail.com"
           id="email"
-          v-model="this.email"
+          v-model="email"
           type="email"
           name="email"
       >
     </label>
-    <span class="form-error" v-if="this.errors.email">{{this.errors.email}}</span>
+    <span class="form-error" v-if="errors.email">{{errors.email}}</span>
     </div>
     <div>
       <label for="">
       <input
           id="password"
-          v-model="this.password"
+          v-model="password"
           type="password"
           name="password"
           placeholder="Password"
       >
     </label>
-    <span class="form-error" v-if="this.errors.password">{{this.errors.password}}</span>
+    <span class="form-error" v-if="errors.password">{{errors.password}}</span>
     </div>
     <button class="btn btn_custom" type="submit" @click="checkForm">submit</button>
   </form>
 </template>
 
 <script lang="ts">
+import { useStore } from 'vuex'
+import { key } from '../../store';
+
 export default {
-  data() {
+  data(): {
+    errors: {
+      email: string,
+      password: string,
+    },
+    email: string,
+    password: string,
+    action: string
+  } {
     return {
-      errors: [],
+      errors: {
+        email: '',
+        password: '',
+      },
       email: '',
       password: '',
       action: 'https://api.dating.com/identity',
     }
   },
+  setup() {
+    const store = useStore(key)
+    const modal = store.state.modal;
+    return {
+      modal
+    }
+  },
   methods: {
-    errors: {
-      email: '',
-      password: '',
-    },
-    email: '',
-    password: '',
-    action: '',
     checkForm: function (e: Event) {
       e.preventDefault();
 
-      this.errors = {
+      (this as any).errors = {
         email: '',
         password: '',
       }
@@ -87,23 +102,23 @@ export default {
               } else {
                 if (isRegistration) return;
                 this.request(body, 'registration');
-                this.$store.state.modal.id = 'success-notification';
-                this.$store.state.modal.isVisible = true;
+                this.modal.id = 'success-notification';
+                this.modal.isVisible = true;
                 isRegistration = true;
 
-                // setTimeout(()=> {
-                //   this.$store.state.modal.id = null;
-                //   this.$store.state.modal.isVisible = false;
-                // }, 2000)
+                setTimeout(()=> {
+                  this.modal.id = null;
+                  this.modal.isVisible = false;
+                }, 2000)
               }
             })
             .catch((err) => console.log(err));
       }
     },
-    request: function (formData: any, type: any) {
+    request: function (formData: any, type: any): Promise<any> {
       if (type === 'authorization') {
         const encode = btoa(`${formData.email}:${formData.password}`);
-        if (!encode) return;
+        if (!encode) return Promise.reject(new Error('Encoding failed'));
         return fetch(this.action, {
           method: 'GET',
           headers: {
@@ -117,9 +132,9 @@ export default {
           body: JSON.stringify(formData)
         });
       }
-
+      return Promise.reject(new Error('Invalid request type'));
     },
-    validEmail: function (email) {
+    validEmail: function (email: string) {
       const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     }

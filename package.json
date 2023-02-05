@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "build-and-deploy": "vue-tsc && vite build && gh-pages -d dist",
+    "preview": "vite preview",
+    "type-check": "vue-tsc --noEmit",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "vue": "^3.2.45",
@@ -17,6 +20,7 @@
     "@types/node": "^18.11.18",
     "@vitejs/plugin-vue": "^4.0.0",
     "bootstrap": "^5.2.3",
+    "gh-pages": "^5.0.0",
     "sass": "^1.57.1",
     "typescript": "^4.9.3",
     "vite": "^4.0.0",
